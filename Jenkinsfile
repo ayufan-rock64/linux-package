@@ -20,109 +20,28 @@ node('docker && linux-build') {
 
       environment.inside("--privileged -u 0:0") {
         withEnv([
-          "USE_CCACHE=true",
           "RELEASE_NAME=$VERSION",
           "RELEASE=$BUILD_NUMBER"
         ]) {
-            stage 'Prepare'
-            sh '''#!/bin/bash
-              set +xe
-              export CCACHE_DIR=$WORKSPACE/ccache
-              ccache -M 0 -F 0
-              git clean -ffdx -e ccache
-            '''
-
-            stage 'Sources'
-            sh '''#!/bin/bash
-              set -xe
-
-              export HOME=$WORKSPACE
-              export USER=jenkins
-
-              repo init -u https://github.com/ayufan-rock64/manifests -b default --depth=1
-
-              repo sync -j 20 -c --force-sync
-            '''
-
-            stage 'U-boot'
-            sh '''#!/bin/bash
-              set +xe
-              export CCACHE_DIR=$WORKSPACE/ccache
-              make u-boot
-            '''
-
-            stage 'Kernel'
-            sh '''#!/bin/bash
-              set +xe
-              export CCACHE_DIR=$WORKSPACE/ccache
-              make kernel
-            '''
-
-            stage 'Images'
-            sh '''#!/bin/bash
-              set +xe
-              export CCACHE_DIR=$WORKSPACE/ccache
-              make -j4 BUILD_ARCH=armhf
-            '''
-        }
-  
-        withEnv([
-          "VERSION=$VERSION",
-          "CHANGES=$CHANGES",
-          "PRERELEASE=$PRERELEASE",
-          "GITHUB_USER=$GITHUB_USER",
-          "GITHUB_REPO=$GITHUB_REPO"
-        ]) {
-          stage 'Freeze'
+          stage 'Prepare'
           sh '''#!/bin/bash
-            # use -ve, otherwise we could leak GITHUB_TOKEN...
-            set -ve
-            shopt -s nullglob
-
-            export HOME=$WORKSPACE
-            export USER=jenkins
-
-            repo manifest -r -o manifest.xml
+            set +xe
+            git clean -ffdx -e ccache
           '''
 
-          stage 'Release'
+          stage 'Package'
           sh '''#!/bin/bash
-            set -xe
-            shopt -s nullglob
-
-            github-release release \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}" \
-                --draft
-
-            github-release upload \
-                --tag "${VERSION}" \
-                --name "manifest.xml" \
-                --file "manifest.xml"
-
-            for file in *.xz *.deb; do
-              github-release upload \
-                  --tag "${VERSION}" \
-                  --name "$(basename "$file")" \
-                  --file "$file" &
-            done
-
-            wait
-
-            if [[ "$PRERELEASE" == "true" ]]; then
-              github-release edit \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}" \
-                --pre-release
-            else
-              github-release edit \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}"
-            fi
+            set +xe
+            make build
           '''
+
+          if (params.GITHUB_TOKEN) {
+            stage 'Upload'
+            sh '''#!/bin/bash
+              set +xe
+              make upload
+            '''
+          }
         }
       }
     }
