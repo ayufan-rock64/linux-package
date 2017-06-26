@@ -34,13 +34,11 @@ node('docker && linux-build') {
             make build
           '''
 
-          if (params.GITHUB_TOKEN) {
-            stage 'Upload'
-            sh '''#!/bin/bash
-              set +xe
-              make upload
-            '''
-          }
+          stage 'Upload'
+          sh '''#!/bin/bash
+            set +xe
+            make upload
+          '''
         }
       }
     }
