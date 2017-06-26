@@ -16,7 +16,7 @@ node('docker && linux-build') {
       stage "Environment"
       checkout scm
 
-      def environment = docker.build('build-environment:build-rock64-image', 'environment')
+      def environment = docker.build('build-environment:build-rock64-linux-package', 'environment')
 
       environment.inside("--privileged -u 0:0") {
         withEnv([
