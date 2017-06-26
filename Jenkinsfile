@@ -20,7 +20,6 @@ node('docker && linux-build') {
 
       environment.inside("--privileged -u 0:0") {
         withEnv([
-          "RELEASE_NAME=$VERSION",
           "RELEASE=$BUILD_NUMBER"
         ]) {
           stage 'Prepare'
