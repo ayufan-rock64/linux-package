@@ -47,6 +47,6 @@ upload: linux-rock64-package-$(RELEASE_NAME).deb
 			github-release edit \
 				--tag "${RELEASE_NAME}" \
 				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
-				--description "${BUILD_URL}"; \
+				--description "${BUILD_URL}" \
 				--pre-release; \
 		fi
