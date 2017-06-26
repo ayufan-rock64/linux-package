@@ -34,9 +34,8 @@ upload: linux-rock64-package-$(RELEASE_NAME).deb
 		for file in $^; do \
 			github-release upload \
 				--tag "${RELEASE_NAME}" \
-				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
-				--name "$(basename "$file")" \
-				--file "$file"; \
+				--name "\$(basename "${file}")" \
+				--file "${file}"; \
 		done
 
 		if git describe --tags --exact-match &>/dev/null; then \
