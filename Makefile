@@ -31,21 +31,22 @@ upload: linux-rock64-package-$(RELEASE_NAME).deb
 			--description "${BUILD_URL}" \
 			--draft
 
-		for i in $*; do \
+		for file in $*; do \
 			github-release upload \
-				--tag "${VERSION}" \
+				--tag "${RELEASE_NAME}" \
+				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
 				--name "$(basename "$file")" \
 				--file "$file"; \
 		done
 
 		if git describe --tags --exact-match &>/dev/null; then \
 			github-release edit \
-				--tag "${VERSION}" \
+				--tag "${RELEASE_NAME}" \
 				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
 				--description "${BUILD_URL}"; \
 		else \
 			github-release edit \
-				--tag "${VERSION}" \
+				--tag "${RELEASE_NAME}" \
 				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
 				--description "${BUILD_URL}"; \
 				--pre-release; \
