@@ -31,7 +31,7 @@ upload: linux-rock64-package-$(RELEASE_NAME).deb
 			--description "${BUILD_URL}" \
 			--draft
 
-		for file in $*; do \
+		for file in $^; do \
 			github-release upload \
 				--tag "${RELEASE_NAME}" \
 				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
