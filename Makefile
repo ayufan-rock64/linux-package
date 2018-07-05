@@ -1,52 +1,59 @@
-export RELEASE_NAME ?= $(shell git describe --tags)
 export RELEASE ?= 1
+export RELEASE_NAME ?= $(shell cat VERSION)-$(RELEASE)-g$(shell git rev-parse --short HEAD)
 
-all: build
+LATEST_UBOOT_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-u-boot/releases | jq -r ".[0].tag_name")
+LATEST_KERNEL_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-kernel/releases | jq -r '.[0] | (.tag_name + "-g" + (.target_commitish | .[0:12]))')
 
-linux-rock64-package-$(RELEASE_NAME).deb:
-	fpm -s dir -t deb -n linux-rock64-package -v $(RELEASE_NAME) \
+ifeq (,$(wildcard root-$(BOARD_TARGET)))
+$(error Unsupported BOARD_TARGET)
+endif
+
+all: linux-virtual \
+	linux-package
+
+linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb:
+	fpm -s empty -t deb -n linux-$(BOARD_TARGET) -v $(RELEASE_NAME) \
+		-p $@ \
+		--deb-priority optional --category admin \
+		--depends "linux-$(BOARD_TARGET)-package (= $(RELEASE_NAME))" \
+		--depends "u-boot-rockchip-$(BOARD_TARGET) (= $(LATEST_UBOOT_VERSION))" \
+		--depends "linux-image-$(LATEST_KERNEL_VERSION)" \
+		--depends "linux-headers-$(LATEST_KERNEL_VERSION)" \
+		--force \
+		--url https://gitlab.com/ayufan-rock64/linux-build \
+		--description "Rock64 Linux virtual package: depends on kernel and compatibility package" \
+		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
+		--license "MIT" \
+		--vendor "Kamil Trzciński" \
+		-a arm64
+
+linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
+	fpm -s dir -t deb -n linux-$(BOARD_TARGET)-package -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
+		--depends figlet \
+		--depends cron \
+		--depends gdisk \
+		--depends parted \
+		--depends device-tree-compiler \
+		--depends linux-base \
 		--deb-compression bzip2 \
+		--deb-field "Multi-Arch: foreign" \
 		--after-install scripts/postinst.deb \
 		--before-remove scripts/prerm.deb \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux support package" \
-		--config-files /boot/extlinux/ \
+		--config-files /boot/efi/extlinux/ \
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a all \
-		root/=/
+		root/=/ \
+		root-$(BOARD_TARGET)/=/
 
-.PHONY: build
-build: linux-rock64-package-$(RELEASE_NAME).deb
+.PHONY: linux-package		# compile linux compatibility package
+linux-package: linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb
 
-.PHONY: upload
-upload: linux-rock64-package-$(RELEASE_NAME).deb
-		github-release release \
-			--tag "${RELEASE_NAME}" \
-			--name "${RELEASE_NAME}: ${BUILD_TAG}" \
-			--description "${BUILD_URL}" \
-			--draft
-
-		for file in $^; do \
-			github-release upload \
-				--tag "${RELEASE_NAME}" \
-				--name "$$(basename "$${file}")" \
-				--file "$${file}"; \
-		done
-
-		if git describe --tags --exact-match &>/dev/null; then \
-			github-release edit \
-				--tag "${RELEASE_NAME}" \
-				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
-				--description "${BUILD_URL}"; \
-		else \
-			github-release edit \
-				--tag "${RELEASE_NAME}" \
-				--name "${RELEASE_NAME}: ${BUILD_TAG}" \
-				--description "${BUILD_URL}" \
-				--pre-release; \
-		fi
+.PHONY: linux-virtual		# compile linux package tying compatiblity package and kernel package
+linux-virtual: linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb

@@ -1,1 +1,3 @@
-Various scripts that I created as Rock64 compatibility package.
+## Information
+
+This repository contains scripts to automatically build linux compatibility packages.

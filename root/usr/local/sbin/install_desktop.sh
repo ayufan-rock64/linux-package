@@ -5,13 +5,13 @@ set -e
 DESKTOP="$1"
 
 if [ -z "$DESKTOP" ]; then
-	echo "Usage: $0 <mate|i3>"
+	echo "Usage: $0 <mate|i3|gnome|xfce4|lxde>"
 	exit 1
 fi
 
 DISTRO=""
 if hash apt-get 2>/dev/null; then
-	DISTRO=debian
+	DISTRO=$(lsb_release -i -s)
 fi
 
 if [ -z "$DISTRO" ]; then
@@ -28,25 +28,74 @@ fi
 PACKAGES=(
 	aisleriot
 	geany
-	gnomine
+	gnome-mines
 	gnome-sudoku
 	mplayer
 	scratch
 	smplayer
 	smplayer-themes
 	smtube
-	chromium-browser
-	lib32mali-rk-utgard-2th-r7p0
-	libdrm-rockchip1
 	xserver-xorg
 	mesa-utils-extra
 )
 
-# Add packages based on desktop selection.
-case $DESKTOP in
-	mate)
+# Video/3d acceleration packages
+PACKAGES+=(
+	xserver-xorg-video-armsoc
+	libdrm-rockchip1
+	ffmpeg
+	mpv
+)
+
+if grep -qi rockpro64 /proc/device-tree/compatible || grep -qi rockpro64 /etc/flash-kernel/machine; then
+	PACKAGES+=(
+		libmali-rk-midgard-t86x-r14p0
+	)
+elif grep -qi rock64 /proc/device-tree/compatible || grep -qi rock64 /etc/flash-kernel/machine; then
+	PACKAGES+=(
+		libmali-rk-utgard-450-r7p0
+	)
+else
+	echo "Board not detected!"
+	exit 1
+fi
+
+# Additional packages
+PACKAGES+=(
+	xserver-xorg-input-all
+	xfonts-base
+	rxvt-unicode-lite
+	suckless-tools
+	network-manager
+	pulseaudio
+)
+
+case $DISTRO in
+	Ubuntu)
 		PACKAGES+=(
-			ubuntu-mate-core
+			chromium-browser
+			firefox
+			gstreamer1.0-rockchip1
+		)
+		;;
+
+	Debian)
+		PACKAGES+=(
+			chromium
+			chromium-widevine
+		)
+		;;
+
+	*)
+		echo "Error: unsupported desktop environment $DESKTOP-$DISTRO"
+		exit 2
+		;;
+esac
+
+# Add packages based on desktop selection.
+case $DESKTOP-$DISTRO in
+	mate-Ubuntu)
+		PACKAGES+=(
 			ubuntu-mate-desktop
 			ubuntu-mate-lightdm-theme
 			ubuntu-mate-wallpapers-xenial
@@ -54,18 +103,50 @@ case $DESKTOP in
 		)
 		;;
 
-	i3|i3wm)
+	mate-Debian)
 		PACKAGES+=(
-			xserver-xorg-input-all
-			xfonts-base
-			slim
-			rxvt-unicode-lite
+			mate-desktop-environment
+			mate-desktop-environment-extras
+			desktop-base
+			lightdm
+		)
+		;;
+
+	gnome-Ubuntu)
+		PACKAGES+=(
+			ubuntu-gnome-desktop
+			ubuntu-gnome-wallpapers-xenial
+		)
+		;;
+
+	gnome-Debian)
+		PACKAGES+=(
+			gnome
+			desktop-base
+		)
+		;;
+
+	i3-Ubuntu|i3-Debian)
+		PACKAGES+=(
 			i3
 			i3status
 			i3lock
-			suckless-tools
-			network-manager
-			pulseaudio
+			slim
+		)
+		;;
+
+	xfce4-Ubuntu|xfce4-Debian)
+		PACKAGES+=(
+			xfce4
+			xfce4-goodies
+			slim
+		)
+		;;
+
+	lxde-Ubuntu|lxde-Debian)
+		PACKAGES+=(
+			lxde
+			lxdm
 		)
 		;;
 
@@ -93,16 +174,15 @@ fi
 case $DESKTOP in
 	mate)
 		# Change default wallpaper
-		dpkg-divert --divert /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold-stock.jpg --rename /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
+		dpkg-divert --divert /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold-stock.jpg --rename /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg || true
 		ln -s /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
 		;;
 
 	i3|i3wm)
-		if [ ! -d /usr/share/slim/themes/pine64 ]; then
-			cp -ra /usr/share/slim/themes/default /usr/share/slim/themes/pine64
-			wget -O /usr/share/slim/themes/pine64/background.png \
-				https://github.com/longsleep/build-pine64-image/raw/master/bootlogo/bootlogo-pine64-1366x768.png
-			sed -i "s/^current_theme(.*)/current_theme pine64/g" /etc/slim.conf
+		if [ ! -d /usr/share/slim/themes/rock64 ]; then
+			cp -ra /usr/share/slim/themes/default /usr/share/slim/themes/rock64
+			ln -s /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/slim/themes/rock64/background.png
+			sed -i "s/^current_theme(.*)/current_theme rock64/g" /etc/slim.conf
 		fi
 		;;
 

@@ -1,8 +1,34 @@
 #!/bin/bash
 
+if [[ "$(id -u)" -ne "0" ]]; then
+	echo "This script requires root."
+	exit 1
+fi
+
+dev=$(findmnt / -n -o SOURCE)
+
+case $dev in
+	/dev/mmcblk*)
+		DISK=${dev:0:12}
+		NAME="sd/emmc"
+		;;
+
+	/dev/sd*)
+		DISK=${dev:0:8}
+		NAME="hdd/ssd"
+		;;
+
+	*)
+		echo "Unknown disk for $dev"
+		exit 1
+		;;
+esac
+
+echo "Resizing $DISK ($NAME -- $dev)..."
+
 set -xe
 
-gdisk /dev/mmcblk0 <<EOF
+gdisk "$DISK" <<EOF
 x
 e
 m
@@ -12,7 +38,7 @@ n
 7
 
 
-EF00
+8300
 c
 7
 root
@@ -20,6 +46,6 @@ w
 Y
 EOF
 
-partprobe /dev/mmcblk0
+partprobe "$DISK"
 
-resize2fs /dev/mmcblk0p7
+resize2fs "$dev"
