@@ -1,5 +1,6 @@
 export RELEASE ?= 1
-export RELEASE_NAME ?= $(shell cat VERSION)-$(RELEASE)-g$(shell git rev-parse --short HEAD)
+export RELEASE_NAME ?= $(shell cat VERSION)-$(RELEASE)
+export RELEASE_VERSION ?= $(RELEASE_NAME)-g$(shell git rev-parse --short HEAD)
 
 LATEST_UBOOT_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-u-boot/releases | jq -r ".[0].tag_name")
 LATEST_KERNEL_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-kernel/releases | jq -r '.[0] | (.tag_name + "-g" + (.target_commitish | .[0:12]))')
@@ -10,6 +11,12 @@ endif
 
 all: linux-virtual \
 	linux-package
+
+version:
+	@echo $(RELEASE_NAME)
+
+release:
+	@echo $(RELEASE_VERSION)
 
 linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb:
 	fpm -s empty -t deb -n linux-$(BOARD_TARGET) -v $(RELEASE_NAME) \
