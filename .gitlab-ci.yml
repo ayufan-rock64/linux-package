@@ -11,6 +11,7 @@ build:
   only: [branches]
   script:
     - export RELEASE="$CI_PIPELINE_IID"
+    - chmod gw-w -R . # fix umask, as GitLab CI uses 0000
     - make BOARD_TARGET=rock64
     - make BOARD_TARGET=rockpro64
     - |
