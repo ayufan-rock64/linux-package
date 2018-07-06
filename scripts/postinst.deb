@@ -10,6 +10,9 @@ case "$1" in
     systemctl enable restore-sound-after-resume
     systemctl enable store-sound-on-suspend
     systemctl enable first-boot
+
+    # generate extlinux.conf
+    /usr/local/sbin/update_extlinux.sh
     ;;
 
   *)
