@@ -28,24 +28,14 @@ echo "Resizing $DISK ($NAME -- $dev)..."
 
 set -xe
 
-gdisk "$DISK" <<EOF
-x
-e
-m
-d
-7
-n
-7
+# move GPT alternate header to end of disk
+sgdisk -e "$DISK"
 
+# resize partition 7 to as much as possible
+echo ",+,,," | sfdisk "${DISK}" -N7 --force
 
-8300
-c
-7
-root
-w
-Y
-EOF
-
+# re-read partition table
 partprobe "$DISK"
 
+# online resize filesystem
 resize2fs "$dev"
