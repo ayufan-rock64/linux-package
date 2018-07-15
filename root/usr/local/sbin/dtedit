@@ -10,8 +10,12 @@ VERSION=${VERSION:-$(uname -r)}
 set -xe
 pushd /boot
 
-if [[ ! -e "dts-${VERSION}.tmp" ]]; then
-  dtc "dtb-${VERSION}" > "dts-${VERSION}.tmp"
+if [[ ! -e "dts-${VERSION}" ]]; then
+  if [[ "$VERSION" == "$(uname -r)" ]]; then
+    dtc "/sys/firmware/fdt" > "dts-${VERSION}.tmp"
+  else
+    dtc "dtb-${VERSION}" > "dts-${VERSION}.tmp"
+  fi
   mv "dts-${VERSION}.tmp" "dts-${VERSION}"
 fi
 
@@ -19,4 +23,5 @@ editor "dts-${VERSION}"
 
 dtc "dts-${VERSION}" > "dtb-${VERSION}.new"
 mv "dtb-${VERSION}.new" "dtb-${VERSION}"
+update_extlinux.sh
 echo Done.
