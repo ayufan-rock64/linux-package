@@ -23,8 +23,12 @@ echo "menu title select kernel"
 [[ -n "$DEFAULT" ]] && echo "default $DEFAULT"
 echo ""
 
-linux-version list | linux-version sort --reverse | while read VERSION; do
-  echo "label kernel-$VERSION"
+emit_kernel() {
+  local VERSION="$1"
+  local APPEND="$2"
+  local NAME="$3"
+
+  echo "label kernel-$VERSION$NAME"
   echo "    kernel /boot/vmlinuz-$VERSION"
   if [[ -f "/boot/initrd.img-$VERSION" ]]; then
     echo "    initrd /boot/initrd.img-$VERSION"
@@ -40,6 +44,11 @@ linux-version list | linux-version sort --reverse | while read VERSION; do
   fi
   echo "    append $APPEND"
   echo ""
+}
+
+linux-version list | linux-version sort --reverse | while read VERSION; do
+  emit_kernel "$VERSION" "$APPEND"
+  emit_kernel "$VERSION" "$APPEND memtest" "-memtest"
 done
 
 exec 1<&-
