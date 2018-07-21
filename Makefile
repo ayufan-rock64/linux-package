@@ -26,6 +26,9 @@ linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
 		--depends device-tree-compiler \
 		--depends linux-base \
 		--deb-compression bzip2 \
+		--deb-field "Provides: linux-package-virtual" \
+		--deb-field "Replaces: linux-package-virtual" \
+		--deb-field "Conflicts: linux-package-virtual" \
 		--deb-field "Multi-Arch: foreign" \
 		--after-install scripts/postinst.deb \
 		--before-remove scripts/prerm.deb \
