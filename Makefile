@@ -6,7 +6,7 @@ ifeq (,$(wildcard root-$(BOARD_TARGET)))
 $(error Unsupported BOARD_TARGET)
 endif
 
-all: linux-package
+all: board-package
 
 version:
 	@echo $(RELEASE_NAME)
@@ -14,8 +14,8 @@ version:
 release:
 	@echo $(RELEASE_VERSION)
 
-linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
-	fpm -s dir -t deb -n linux-$(BOARD_TARGET)-package-$(RELEASE_NAME) -v $(RELEASE_NAME) \
+board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb:
+	fpm -s dir -t deb -n board-package-$(BOARD_TARGET)-$(RELEASE_NAME) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
@@ -26,9 +26,9 @@ linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
 		--depends device-tree-compiler \
 		--depends linux-base \
 		--deb-compression bzip2 \
-		--deb-field "Provides: linux-$(BOARD_TARGET)-package, linux-package-virtual" \
-		--deb-field "Replaces: linux-$(BOARD_TARGET)-package, linux-package-virtual" \
-		--deb-field "Conflicts: linux-$(BOARD_TARGET)-package, linux-package-virtual" \
+		--deb-field "Provides: linux-package-virtual, board-package-virtual, linux-$(BOARD_TARGET)-package, board-package-$(BOARD_TARGET)" \
+		--deb-field "Replaces: linux-package-virtual, board-package-virtual, linux-$(BOARD_TARGET)-package, board-package-$(BOARD_TARGET)" \
+		--deb-field "Conflicts: linux-package-virtual, board-package-virtual, linux-$(BOARD_TARGET)-package, board-package-$(BOARD_TARGET)" \
 		--deb-field "Multi-Arch: foreign" \
 		--after-install scripts/postinst.deb \
 		--before-remove scripts/prerm.deb \
@@ -42,5 +42,5 @@ linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
 		root/=/ \
 		root-$(BOARD_TARGET)/=/
 
-.PHONY: linux-package		# compile linux compatibility package
-linux-package: linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb
+.PHONY: board-package		# compile board compatibility package
+board-package: board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
