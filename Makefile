@@ -15,7 +15,7 @@ release:
 	@echo $(RELEASE_VERSION)
 
 linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
-	fpm -s dir -t deb -n linux-$(BOARD_TARGET)-package -v $(RELEASE_NAME) \
+	fpm -s dir -t deb -n linux-$(BOARD_TARGET)-package-$(RELEASE_NAME) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
