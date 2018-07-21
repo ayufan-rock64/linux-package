@@ -15,7 +15,7 @@ release:
 	@echo $(RELEASE_VERSION)
 
 linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
-	fpm -s dir -t deb -n linux-$(BOARD_TARGET)-package -v $(RELEASE_NAME) \
+	fpm -s dir -t deb -n linux-$(BOARD_TARGET)-package-$(RELEASE_NAME) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
@@ -26,9 +26,9 @@ linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb:
 		--depends device-tree-compiler \
 		--depends linux-base \
 		--deb-compression bzip2 \
-		--deb-field "Provides: linux-package-virtual" \
-		--deb-field "Replaces: linux-package-virtual" \
-		--deb-field "Conflicts: linux-package-virtual" \
+		--deb-field "Provides: linux-$(BOARD_TARGET)-package, linux-package-virtual" \
+		--deb-field "Replaces: linux-$(BOARD_TARGET)-package, linux-package-virtual" \
+		--deb-field "Conflicts: linux-$(BOARD_TARGET)-package, linux-package-virtual" \
 		--deb-field "Multi-Arch: foreign" \
 		--after-install scripts/postinst.deb \
 		--before-remove scripts/prerm.deb \
