@@ -2,7 +2,7 @@
 
 set -e
 
-STAT_PATH=/sys/bus/platform/drivers/rk_gmac-dwmac/ff540000.eth/net/eth0/statistics
+STAT_PATH=/sys/bus/platform/drivers/rk_gmac-dwmac/ff540000.ethernet/net/eth0/statistics
 
 print() {
         printf "%-20s: %s %s\n" "$1" "$2 $3" "$4"
