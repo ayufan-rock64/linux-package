@@ -27,7 +27,7 @@ esac
 case "$1" in
 	rootfs)
 		echo "Generating extlinux configuration on rootfs..."
-		update_extlinux.sh
+		update-extlinux.sh
 
 		echo "Switching boot to / on $DISK..."
 		parted -s "$DISK" set 7 legacy_boot on

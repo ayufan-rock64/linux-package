@@ -23,5 +23,5 @@ editor "dts-${VERSION}"
 
 dtc "dts-${VERSION}" > "dtb-${VERSION}.new"
 mv "dtb-${VERSION}.new" "dtb-${VERSION}"
-update_extlinux.sh
+update-extlinux.sh
 echo Done.
