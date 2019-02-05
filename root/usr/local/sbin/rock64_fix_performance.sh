@@ -8,7 +8,7 @@ export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 Tweak_Ondemand_Governor() {
 	echo ondemand >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	sleep 0.1
-	pushd /sys/devices/system/cpu
+	pushd /sys/devices/system/cpu > /dev/null
 	for i in cpufreq/ondemand cpu0/cpufreq/ondemand cpu4/cpufreq/ondemand ; do
 		if [ -d $i ]; then
 			echo 1 >${i}/io_is_busy
@@ -16,7 +16,7 @@ Tweak_Ondemand_Governor() {
 			echo 10 >${i}/sampling_down_factor
 		fi
 	done
-	popd
+	popd > /dev/null
 }
 
 SMP_Affinity() {
