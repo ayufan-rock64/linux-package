@@ -26,12 +26,7 @@ fi
 
 # Default packages.
 PACKAGES=(
-	aisleriot
-	geany
-	gnome-mines
-	gnome-sudoku
 	mplayer
-	scratch
 	smplayer
 	smplayer-themes
 	smtube
@@ -97,9 +92,9 @@ esac
 case $DESKTOP-$DISTRO in
 	mate-Ubuntu)
 		PACKAGES+=(
-			ubuntu-mate-desktop
-			ubuntu-mate-lightdm-theme
-			ubuntu-mate-wallpapers-xenial
+			ubuntu-mate-core
+			mate-applet-brisk-menu
+			mate-applet-appmenu
 			lightdm
 		)
 		;;
@@ -159,7 +154,7 @@ esac
 
 # Install.
 apt -y update
-apt -y install ${PACKAGES[@]}
+apt -y --install-recommends install ${PACKAGES[@]}
 
 # Kill parport module loading, not available on arm64.
 if [ -e "/etc/modules-load.d/cups-filters.conf" ]; then
@@ -176,7 +171,7 @@ case $DESKTOP in
 	mate)
 		# Change default wallpaper
 		dpkg-divert --divert /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold-stock.jpg --rename /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg || true
-		ln -s /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
+		ln -sf /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
 		;;
 
 	i3|i3wm)
