@@ -9,7 +9,6 @@ export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-background-networking"
 
 export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --use-gl=egl --enable-remote-extensions"
 
-export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --enable-low-end-device-mode"
 export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-composited-antialiasing"
 export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --num-raster-threads=4"
 export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --profiler-timing=0"
