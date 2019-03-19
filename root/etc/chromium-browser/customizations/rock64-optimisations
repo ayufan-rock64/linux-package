@@ -1,9 +1,16 @@
-# Options to pass to chromium-browser
-CHROMIUM_FLAGS="$CHROMIUM_FLAGS \
---disable-smooth-scrolling \
---disable-low-res-tiling \
---enable-low-end-device-mode \
---num-raster-threads=4 \
---profiler-timing=0 \
---disable-composited-antialiasing \
-"
+# Do not hide any extensions in the about:extensions dialog
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --show-component-extension-options"
+
+# Don't use the GPU blacklist (bug #802933)
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --ignore-gpu-blacklist"
+
+# Disable background networking
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-background-networking"
+
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --use-gl=egl --enable-remote-extensions"
+
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --enable-low-end-device-mode"
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-composited-antialiasing"
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --num-raster-threads=4"
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --profiler-timing=0"
+
