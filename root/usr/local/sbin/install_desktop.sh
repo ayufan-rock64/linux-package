@@ -95,6 +95,10 @@ case $DESKTOP-$DISTRO in
 			ubuntu-mate-core
 			mate-applet-brisk-menu
 			mate-applet-appmenu
+			mate-desktop-environment
+			mate-desktop-environment-extra
+			mate-desktop-environment-extras
+			mate-hud
 			lightdm
 		)
 		;;
@@ -102,7 +106,9 @@ case $DESKTOP-$DISTRO in
 	mate-Debian)
 		PACKAGES+=(
 			mate-desktop-environment
+			mate-desktop-environment-extra
 			mate-desktop-environment-extras
+			mate-hud
 			desktop-base
 			lightdm
 		)
