@@ -1,0 +1,9 @@
+[Unit]
+Description=Start bluetooth on ttyS0
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/hciattach /dev/ttyS0 any
+
+[Install]
+WantedBy=multi-user.target
