@@ -183,7 +183,7 @@ case $DESKTOP in
 	i3|i3wm)
 		if [ ! -d /usr/share/slim/themes/rock64 ]; then
 			cp -ra /usr/share/slim/themes/default /usr/share/slim/themes/rock64
-			ln -s /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/slim/themes/rock64/background.png
+			ln -sf /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/slim/themes/rock64/background.png
 			sed -i "s/^current_theme(.*)/current_theme rock64/g" /etc/slim.conf
 		fi
 		;;
@@ -191,6 +191,11 @@ case $DESKTOP in
 	*)
 		;;
 esac
+
+# Fix Ubuntu bug throwing the `Failed to execute program org.blueman.Mechanism`
+# https://bugs.launchpad.net/ubuntu/+source/blueman/+bug/1542723
+chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper || true
+chown root:messagebus /usr/lib/dbus-1.0/dbus-daemon-launch-helper || true
 
 echo
 echo "Done - $DESKTOP installed - you should reboot now."
