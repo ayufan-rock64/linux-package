@@ -1,0 +1,6 @@
+[org/mate/panel/objects/cpu-freq-applet/prefs]
+cpu=4
+
+[org/mate/desktop/background]
+picture-options='zoom'
+picture-filename='/usr/share/backgrounds/rock64/ROCKPRO64-Wallpaper-1.jpg'

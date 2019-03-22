@@ -10,6 +10,9 @@ case "$1" in
     systemctl enable first-boot
     systemctl enable sdio-hciattach || true
 
+    # update dconf
+    /usr/bin/dconf update
+
     # generate extlinux.conf
     /usr/local/sbin/update-extlinux.sh
     ;;
