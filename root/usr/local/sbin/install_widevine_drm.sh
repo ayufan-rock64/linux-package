@@ -15,6 +15,12 @@ if [[ "$(dpkg-architecture -qDEB_HOST_ARCH)" != "armhf" ]]; then
   exit 1
 fi
 
+if ! which kpartx &>/dev/null; then
+  echo "Missing kpartx. Installing..."
+  apt-get update -y
+  apt-get install -y kpartx
+fi
+
 # Ensure that symlink is installed
 ln -fs /opt/google/chrome/libwidevinecdm.so /usr/lib/chromium-browser/libwidevinecdm.so
 
@@ -60,7 +66,7 @@ fi
 
 echo "Mounting recovery image..."
 mkdir -p rootfs/
-mount -o ro "/dev/${LOOP_DEV}" rootfs/
+mount -o ro "/dev/mapper/${LOOP_DEV}" rootfs/
 
 cleanup() {
   umount rootfs/
