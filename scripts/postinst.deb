@@ -11,7 +11,9 @@ case "$1" in
     systemctl enable sdio-hciattach || true
 
     # update dconf
-    /usr/bin/dconf update
+    if which dconf &> /dev/null; then
+      /usr/bin/dconf update
+    fi
 
     # generate extlinux.conf
     /usr/local/sbin/update-extlinux.sh
