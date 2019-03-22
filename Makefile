@@ -42,5 +42,14 @@ board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb:
 		root/=/ \
 		root-$(BOARD_TARGET)/=/
 
+.PHONY: clean
+clean:
+	rm -f board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
+
 .PHONY: board-package		# compile board compatibility package
 board-package: board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
+
+.PHONY: deploy
+deploy: clean board-package
+	scp -4 board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb root@$(DEPLOY_HOST):/tmp
+	ssh -4 root@$(DEPLOY_HOST) apt -y --reinstall install /tmp/board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
