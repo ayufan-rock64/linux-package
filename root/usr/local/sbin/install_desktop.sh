@@ -47,6 +47,10 @@ if grep -qi rockpro64 /proc/device-tree/compatible || grep -qi rockpro64 /etc/fl
 	PACKAGES+=(
 		libmali-rk-midgard-t86x-r14p0
 	)
+elif grep -qi pinebook-pro /proc/device-tree/compatible || grep -qi pinebookpro /etc/flash-kernel/machine; then
+	PACKAGES+=(
+		libmali-rk-midgard-t86x-r14p0
+	)
 elif grep -qi rock64 /proc/device-tree/compatible || grep -qi rock64 /etc/flash-kernel/machine; then
 	PACKAGES+=(
 		libmali-rk-utgard-450-r7p0
