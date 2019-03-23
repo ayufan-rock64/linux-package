@@ -64,7 +64,6 @@ fi
 PACKAGES+=(
 	xserver-xorg-input-all
 	xfonts-base
-	rxvt-unicode-lite
 	suckless-tools
 	network-manager
 	pulseaudio
@@ -138,6 +137,7 @@ case $DESKTOP-$DISTRO in
 			i3status
 			i3lock
 			slim
+			rxvt-unicode-lite
 		)
 		;;
 
