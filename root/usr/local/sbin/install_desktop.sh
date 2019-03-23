@@ -192,8 +192,10 @@ esac
 
 # Fix Ubuntu bug throwing the `Failed to execute program org.blueman.Mechanism`
 # https://bugs.launchpad.net/ubuntu/+source/blueman/+bug/1542723
-chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper || true
-chown root:messagebus /usr/lib/dbus-1.0/dbus-daemon-launch-helper || true
+if [[ -e /usr/lib/dbus-1.0/dbus-daemon-launch-helper ]]; then
+	chown root:messagebus /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+	chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+fi
 
 echo
 echo "Done - $DESKTOP installed - you should reboot now."
