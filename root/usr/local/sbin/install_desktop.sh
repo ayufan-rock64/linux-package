@@ -190,6 +190,11 @@ case $DESKTOP in
 		;;
 esac
 
+# Disable `swrast` as it kills compositing performance when using glamor
+# This happen due to back/and/forth copy of buffers between mali and mesa
+dpkg-divert --rename --add /usr/lib/arm-linux-gnueabihf/dri/kms_swrast_dri.so
+dpkg-divert --rename --add /usr/lib/arm-linux-gnueabihf/dri/swrast_dri.so
+
 # Fix Ubuntu bug throwing the `Failed to execute program org.blueman.Mechanism`
 # https://bugs.launchpad.net/ubuntu/+source/blueman/+bug/1542723
 if [[ -e /usr/lib/dbus-1.0/dbus-daemon-launch-helper ]]; then
