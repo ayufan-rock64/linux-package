@@ -21,6 +21,9 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
 # TODO: workaround, add xenial for now
 RELEASE=$(lsb_release -cs)
+if [[ "$RELEASE" == "bionic" ]]; then
+    RELEASE=xenial
+fi
 
 add-apt-repository \
    "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $RELEASE stable"
