@@ -39,6 +39,7 @@ PACKAGES+=(
 	xserver-xorg-video-armsoc
 	libmali-rk-dev
 	libdrm-rockchip1
+	libgl4es1
 	ffmpeg
 	mpv
 )
