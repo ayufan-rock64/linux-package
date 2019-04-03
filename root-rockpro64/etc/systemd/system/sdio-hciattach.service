@@ -3,7 +3,7 @@ Description=Start bluetooth on ttyS0
 
 [Service]
 Type=forking
-ExecStart=/bin/bash -c 'echo 0 > /sys/class/rfkill/rfkill0/state; sleep 1; echo 1 > /sys/class/rfkill/rfkill0/state; sleep 1; exec /usr/bin/hciattach /dev/ttyS0 any 1500000 flow nosleep'
+ExecStart=/bin/bash -c 'echo 0 > /sys/class/rfkill/rfkill0/state; sleep 1; echo 1 > /sys/class/rfkill/rfkill0/state; sleep 1; exec /usr/bin/hciattach /dev/ttyS0 any 115200 flow nosleep'
 
 [Install]
 WantedBy=multi-user.target
