@@ -1,5 +1,6 @@
 [Unit]
 Description=Start bluetooth on ttyS0
+After=systemd-modules-load.service local-fs.target
 
 [Service]
 Type=forking
