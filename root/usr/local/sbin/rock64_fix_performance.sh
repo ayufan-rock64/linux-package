@@ -5,18 +5,26 @@
 
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
-Tweak_Ondemand_Governor() {
-	echo ondemand >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+Tweak_CPUFreq_Governor() {
+	if [ ! -d $1 ]; then
+		continue
+	fi
+
+	echo ondemand > $1/cpufreq/scaling_governor
+
 	sleep 0.1
-	pushd /sys/devices/system/cpu
-	for i in cpufreq/ondemand cpu0/cpufreq/ondemand cpu4/cpufreq/ondemand ; do
-		if [ -d $i ]; then
-			echo 1 >${i}/io_is_busy
-			echo 25 >${i}/up_threshold
-			echo 10 >${i}/sampling_down_factor
-		fi
-	done
-	popd
+
+	if [ -d $1/cpufreq/ondemand ]; then
+		echo 1 >$1/cpufreq/ondemand/io_is_busy
+		echo 25 >$1/cpufreq/ondemand/up_threshold
+		echo 10 >$1/cpufreq/ondemand/sampling_down_factor
+	fi
+}
+
+Tweak_DevFreq_Governor() {
+	if [ -d "$1" ]; then
+		echo performance > "$1/governor"
+	fi
 }
 
 SMP_Affinity() {
@@ -39,7 +47,12 @@ Enable_RPS_and_tweak_IRQ_Affinity() {
 	echo 32768 >/sys/class/net/eth0/queues/rx-0/rps_flow_cnt
 }
 
-Tweak_Ondemand_Governor
+Tweak_CPUFreq_Governor /sys/devices/system/cpu/cpu0 # rock64 and rockpro64
+Tweak_CPUFreq_Governor /sys/devices/system/cpu/cpu4 # rockpro64
+Tweak_DevFreq_Governor /sys/class/devfreq/ff9a0000.gpu # rockpro64
+Tweak_DevFreq_Governor /sys/class/devfreq/ff300000.gpu # rock64
+Tweak_DevFreq_Governor /sys/class/devfreq/dmc # rock64 and rockpro64
+
 Enable_RPS_and_tweak_IRQ_Affinity
 
 exit 0
