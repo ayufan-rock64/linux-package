@@ -7,21 +7,48 @@ fi
 
 VERSION="${1:-$(uname -r)}"
 
-set -xe
+set -e
 pushd /boot
+
+verbose_run() {
+  echo ">>" "$@"
+  eval "$@"
+}
 
 if [[ ! -e "dts-${VERSION}" ]]; then
   if [[ "$VERSION" == "$(uname -r)" ]]; then
-    dtc "/sys/firmware/fdt" > "dts-${VERSION}.tmp"
+    verbose_run dtc "/sys/firmware/fdt" \> "dts-${VERSION}.tmp"
   else
-    dtc "dtb-${VERSION}" > "dts-${VERSION}.tmp"
+    verbose_run dtc "dtb-${VERSION}" \> "dts-${VERSION}.tmp"
   fi
-  mv "dts-${VERSION}.tmp" "dts-${VERSION}"
+  verbose_run mv "dts-${VERSION}.tmp" "dts-${VERSION}"
 fi
 
-editor "dts-${VERSION}"
+verbose_run editor "dts-${VERSION}"
 
-dtc "dts-${VERSION}" > "dtb-${VERSION}.new"
-mv "dtb-${VERSION}.new" "dtb-${VERSION}"
-update-extlinux.sh
+echo "Use overlay or not?"
+while true; do
+  echo "Say YES or NO or DROP:"
+  read USE
+
+  if [[ "$USE" == "YES" ]] || [[ "$USE" == "NO" ]] || [[ "$USE" == "DROP" ]]; then
+    break
+  fi
+done
+
+echo
+
+if [[ "$USE" == "YES" ]]; then
+  echo "Enabling user dts-${VERSION}..."
+  verbose_run dtc "dts-${VERSION}" \> "dtb-${VERSION}.new"
+  verbose_run mv "dtb-${VERSION}.new" "dtb-${VERSION}"
+elif [[ "$USE" == "DROP" ]]; then
+  echo "Using stock dts-${VERSION}..."
+  verbose_run rm -f "dtb-${VERSION}" "dts-${VERSION}"
+else
+  echo "Using stock dts-${VERSION}..."
+  verbose_run rm -f "dtb-${VERSION}"
+fi
+
+verbose_run update-extlinux.sh
 echo Done.
