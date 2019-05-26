@@ -15,6 +15,7 @@ build:
     - make BOARD_TARGET=rock64
     - make BOARD_TARGET=rockpro64
     - make BOARD_TARGET=pinebookpro
+    - make BOARD_TARGET=rockpi4b
     - |
       set -x
 
