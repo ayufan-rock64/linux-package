@@ -14,6 +14,7 @@ build:
     - chmod go-w -R . # fix umask, as GitLab CI uses 0000
     - make BOARD_TARGET=rock64
     - make BOARD_TARGET=rockpro64
+    - make BOARD_TARGET=rockpi4b
     - make BOARD_TARGET=pinebookpro
     - |
       set -x
