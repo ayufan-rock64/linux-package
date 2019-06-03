@@ -1,0 +1,9 @@
+/dts-v1/;
+/ {
+	fragment@0 {
+		target-path = "/ethernet@ff550000";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};
