@@ -1,0 +1,16 @@
+[Unit]
+Description=Kernel Overlays via /etc/kernel/overlays for %I
+Before=basic.target
+After=local-fs.target sysinit.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/sys/kernel/config/device-tree/overlays
+ExecStartPre=-/bin/bash -c 'mkdir %i'
+ExecStart=/bin/bash -c 'dtc -I dts -Odtb -o %i/dtbo /etc/kernel/overlays/%i.dts'
+ExecStartPost=/bin/bash -c '[[ "$(cat "%i/status")" == "applied" ]]'
+ExecStop=/bin/bash -c 'rmdir %i'
+
+[Install]
+WantedBy=basic.target
