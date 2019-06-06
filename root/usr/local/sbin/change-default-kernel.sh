@@ -44,6 +44,11 @@ echo
 echo "Selected: kernel-${VERSIONS[$USER_CHOICE]}"
 echo
 
+if [[ ! -f "/boot/initrd.img-${VERSIONS[$USER_CHOICE]}" ]]; then
+  echo "Generating initial ramdisk..." 1>&2
+  update-initramfs -k "${VERSIONS[$USER_CHOICE]}" -c
+fi
+
 echo "Updating configuration..." 1>&2
 cat <<EOF >> /etc/default/extlinux
 # kernel choosen at $(date)
