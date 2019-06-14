@@ -10,6 +10,9 @@ case "$1" in
     systemctl enable first-boot
     systemctl enable sdio-hciattach || true
 
+    # update hwdb
+    systemd-hwdb update
+
     # update dconf
     if which dconf &> /dev/null; then
       /usr/bin/dconf update
