@@ -1,0 +1,3 @@
+ENV{ID_PATH}=="platform-spdif-sound", ENV{SOUND_DESCRIPTION}="SPDIF",
+ENV{ID_PATH}=="platform-hdmi-sound", ENV{SOUND_DESCRIPTION}="HDMI",
+ENV{ID_PATH}=="platform-speakers-sound", ENV{SOUND_DESCRIPTION}="Speakers",
