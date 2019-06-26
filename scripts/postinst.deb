@@ -12,6 +12,7 @@ case "$1" in
     systemctl enable first-boot
     systemctl enable sdio-hciattach || true
 
+    # enable proper ppa
     if [[ "$DISTRIB_CODENAME" == "bionic" ]] || [[ "$DISTRIB_CODENAME" == "buster" ]]; then
       dpkg-divert --local \
         --divert /etc/apt/sources.list.d/ayufan-rock64-0.8-bionic-ppa.list \
