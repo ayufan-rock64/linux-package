@@ -13,11 +13,11 @@ case "$1" in
     systemctl enable sdio-hciattach || true
 
     # enable proper ppa
-    if [[ "$DISTRIB_CODENAME" == "bionic" ]] || [[ "$DISTRIB_CODENAME" == "buster" ]]; then
+    if [[ "$DISTRIB_CODENAME" == "bionic" ]]; then
       dpkg-divert --local \
         --divert /etc/apt/sources.list.d/ayufan-rock64-0.8-bionic-ppa.list \
         --rename /etc/apt/sources.list.d/ayufan-rock64-0.8-bionic-ppa.list.bak || true
-    elif [[ "$DISTRIB_CODENAME" == "xenial" ]] || [[ "$DISTRIB_CODENAME" == "stretch" ]]; then
+    elif [[ "$DISTRIB_CODENAME" == "xenial" ]]; then
       dpkg-divert --local \
         --divert /etc/apt/sources.list.d/ayufan-rock64-0.8-xenial-ppa.list \
         --rename /etc/apt/sources.list.d/ayufan-rock64-0.8-xenial-ppa.list.bak || true
