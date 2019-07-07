@@ -1,0 +1,30 @@
+/dts-v1/;
+/ {
+	fragment@0 {
+		target-path = "/pwm@ff420000";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@1 {
+		target-path = "/lcd-backlight";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@2 {
+		target-path = "/edp-panel";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@3 {
+		target-path = "/edp@ff970000";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};

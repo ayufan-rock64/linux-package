@@ -1,0 +1,9 @@
+/dts-v1/;
+/ {
+	fragment@0 {
+		target-path = "/i2c@ff3d0000/gt9xx@14";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};
