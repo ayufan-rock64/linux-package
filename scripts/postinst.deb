@@ -13,18 +13,10 @@ case "$1" in
     systemctl enable sdio-hciattach || true
 
     # enable proper ppa
-    if [[ "$DISTRIB_CODENAME" == "bionic" ]]; then
+    if [[ -f /etc/apt/sources.list.d/ayufan-rock64-$DISTRIB_CODENAME-ppa.list.bak ]]; then
       dpkg-divert --local \
-        --divert /etc/apt/sources.list.d/ayufan-rock64-bionic-ppa.list \
-        --rename /etc/apt/sources.list.d/ayufan-rock64-bionic-ppa.list.bak || true
-    elif [[ "$DISTRIB_CODENAME" == "xenial" ]]; then
-      dpkg-divert --local \
-        --divert /etc/apt/sources.list.d/ayufan-rock64-xenial-ppa.list \
-        --rename /etc/apt/sources.list.d/ayufan-rock64-xenial-ppa.list.bak || true
-    elif [[ "$DISTRIB_CODENAME" == "disco" ]]; then
-      dpkg-divert --local \
-        --divert /etc/apt/sources.list.d/ayufan-rock64-disco-ppa.list \
-        --rename /etc/apt/sources.list.d/ayufan-rock64-disco-ppa.list.bak || true
+        --divert /etc/apt/sources.list.d/ayufan-rock64-$DISTRIB_CODENAME-ppa.list \
+        --rename /etc/apt/sources.list.d/ayufan-rock64-$DISTRIB_CODENAME-ppa.list.bak || true
     fi
 
     # update hwdb
