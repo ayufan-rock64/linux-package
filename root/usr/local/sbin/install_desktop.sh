@@ -76,7 +76,6 @@ case $DISTRO in
 		PACKAGES+=(
 			chromium-browser
 			firefox
-			gstreamer1.0-rockchip1
 		)
 		;;
 
