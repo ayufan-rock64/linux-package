@@ -25,7 +25,6 @@ board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb:
 		--depends parted \
 		--depends device-tree-compiler \
 		--depends linux-base \
-		--deb-compression bzip2 \
 		--deb-field "Provides: linux-package-virtual, board-package-virtual, linux-$(BOARD_TARGET)-package, board-package-$(BOARD_TARGET)" \
 		--deb-field "Replaces: linux-package-virtual, board-package-virtual, linux-$(BOARD_TARGET)-package, board-package-$(BOARD_TARGET)" \
 		--deb-field "Conflicts: linux-package-virtual, board-package-virtual, linux-$(BOARD_TARGET)-package, board-package-$(BOARD_TARGET)" \
