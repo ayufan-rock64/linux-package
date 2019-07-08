@@ -11,8 +11,13 @@ case "$(lsb_release -c -s)" in
 		EXTRAS_URL="https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all4.deb"
 		;;
 
+	buster)
+		RELEASE="usul"
+		EXTRAS_URL="https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all5.deb"
+		;;
+
 	*)
-		echo "This script only works on Debian/Jessie|Stretch"
+		echo "This script only works on Debian/Jessie|Stretch|Buster"
 		exit 1
 esac
 
