@@ -1,0 +1,7 @@
+[org/mate/desktop/interface]
+enable-animations=false
+icon-theme='Ambiant-MATE'
+gtk-theme='Ambiant-MATE-Dark'
+
+[org/mate/marco/general]
+theme='Ambiant-MATE-Dark'

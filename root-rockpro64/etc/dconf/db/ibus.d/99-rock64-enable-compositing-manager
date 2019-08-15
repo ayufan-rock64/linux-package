@@ -1,2 +1,5 @@
 [org/mate/marco/general]
 compositing-manager=true
+
+[org/mate/desktop/session/required-components]
+windowmanager='marco-compton'
