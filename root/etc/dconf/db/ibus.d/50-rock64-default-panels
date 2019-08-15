@@ -1,16 +1,9 @@
 [org/mate/panel/general]
-object-id-list=['briskmenu', 'notification-area', 'indicatorappletcomplete', 'clock', 'show-desktop', 'window-list', 'workspace-switcher', 'trashapplet', 'netspeed-applet', 'cpu-freq-applet', 'multi-load-applet', 'chromium-browser', 'firefox-applet', 'brightness-applet']
+object-id-list=['briskmenu', 'notification-area', 'indicatorappletcomplete', 'clock', 'show-desktop', 'window-list', 'workspace-switcher', 'trashapplet', 'cpu-freq-applet', 'chromium-browser', 'firefox-applet']
 toplevel-id-list=['top', 'bottom']
 
 [org/mate/panel/toplevels/bottom]
 orientation='bottom'
-
-[org/mate/panel/objects/brightness-applet]
-applet-iid='BrightnessAppletFactory::BrightnessApplet'
-toplevel-id='top'
-position=1594
-object-type='applet'
-panel-right-stick=false
 
 [org/mate/panel/objects/workspace-switcher]
 applet-iid='WnckletFactory::WorkspaceSwitcherApplet'
@@ -76,13 +69,6 @@ toplevel-id='bottom'
 position=0
 object-type='applet'
 
-[org/mate/panel/objects/netspeed-applet]
-applet-iid='NetspeedAppletFactory::NetspeedApplet'
-toplevel-id='top'
-position=1326
-object-type='applet'
-panel-right-stick=false
-
 [org/mate/panel/objects/cpu-freq-applet]
 applet-iid='CPUFreqAppletFactory::CPUFreqApplet'
 toplevel-id='top'
@@ -92,13 +78,6 @@ panel-right-stick=false
 
 [org/mate/panel/objects/cpu-freq-applet/prefs]
 cpu=0
-
-[org/mate/panel/objects/multi-load-applet]
-applet-iid='MultiLoadAppletFactory::MultiLoadApplet'
-toplevel-id='top'
-position=1552
-object-type='applet'
-panel-right-stick=false
 
 [org/mate/panel/objects/firefox-applet]
 launcher-location='firefox-1.desktop'
