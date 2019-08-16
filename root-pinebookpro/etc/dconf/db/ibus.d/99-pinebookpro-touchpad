@@ -1,0 +1,5 @@
+[peripherals/touchpad]
+motion-threshold=10
+motion-acceleration=10.0
+three-finger-click=0
+two-finger-click=0
