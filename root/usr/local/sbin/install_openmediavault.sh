@@ -53,7 +53,9 @@ deb https://openmediavault.github.io/packages/ $RELEASE-proposed main
 EOF
 
 # Add OMV and OMV Plugin developer keys
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 24863F0C716B980B 7E7A6C592EF35D13 7AA630A1EDEE7D73
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 24863F0C716B980B
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7E7A6C592EF35D13
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7AA630A1EDEE7D73
 apt-get update -y
 
 # install debconf-utils, postfix and OMV
