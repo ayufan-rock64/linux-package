@@ -72,7 +72,7 @@ object-type='applet'
 [org/mate/panel/objects/cpu-freq-applet]
 applet-iid='CPUFreqAppletFactory::CPUFreqApplet'
 toplevel-id='top'
-position=1466
+position=1531
 object-type='applet'
 panel-right-stick=false
 
