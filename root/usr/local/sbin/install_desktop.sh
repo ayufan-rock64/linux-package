@@ -204,5 +204,18 @@ if [[ -e /usr/lib/dbus-1.0/dbus-daemon-launch-helper ]]; then
 	chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper
 fi
 
+if [[ ! -f /etc/pulse/default.pa ]]; then
+	echo "PulseAudio is missing and cannot be configured."
+	exit 1
+fi
+
+cat <<EOF >> /etc/pulse/default.pa
+# Set HDMI (if available)
+set-default-sink alsa_output.platform-hdmi-sound.stereo-fallback
+
+# Set speakers (if available)
+set-default-sink alsa_output.platform-speaker-sound.stereo-fallback
+EOF
+
 echo
 echo "Done - $DESKTOP installed - you should reboot now."
