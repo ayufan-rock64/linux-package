@@ -37,7 +37,6 @@ PACKAGES=(
 # Video/3d acceleration packages
 PACKAGES+=(
 	xserver-xorg-video-armsoc
-	libmali-rk-dev
 	libdrm-rockchip1
 	libgl1
 	libgl4es1
