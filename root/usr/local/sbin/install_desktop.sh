@@ -69,6 +69,7 @@ PACKAGES+=(
 	suckless-tools
 	network-manager
 	pulseaudio
+	ibus
 )
 
 case $DISTRO in
@@ -104,8 +105,7 @@ case $DESKTOP-$DISTRO in
 			mate-desktop-environment-extras
 			mate-hud
 			lightdm
-			lightdm-gtk-greeter
-			ubuntu-mate-lightdm-theme
+			unity-greeter
 		)
 		;;
 
@@ -157,8 +157,7 @@ case $DESKTOP-$DISTRO in
 		PACKAGES+=(
 			lxde
 			lightdm
-			lightdm-gtk-greeter
-			ubuntu-mate-lightdm-theme
+			unity-greeter
 		)
 		;;
 
