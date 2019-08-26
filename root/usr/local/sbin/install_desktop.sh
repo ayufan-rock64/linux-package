@@ -40,6 +40,7 @@ PACKAGES+=(
 	libdrm-rockchip1
 	libgl1
 	libgl4es1
+	libglvnd-dev
 	ffmpeg
 	mpv
 )
@@ -103,6 +104,8 @@ case $DESKTOP-$DISTRO in
 			mate-desktop-environment-extras
 			mate-hud
 			lightdm
+			lightdm-gtk-greeter
+			ubuntu-mate-lightdm-theme
 		)
 		;;
 
@@ -114,6 +117,7 @@ case $DESKTOP-$DISTRO in
 			mate-hud
 			desktop-base
 			lightdm
+			lightdm-gtk-greeter
 		)
 		;;
 
@@ -149,10 +153,20 @@ case $DESKTOP-$DISTRO in
 		)
 		;;
 
-	lxde-Ubuntu|lxde-Debian)
+	lxde-Ubuntu)
 		PACKAGES+=(
 			lxde
-			lxdm
+			lightdm
+			lightdm-gtk-greeter
+			ubuntu-mate-lightdm-theme
+		)
+		;;
+
+	lxde-Debian)
+		PACKAGES+=(
+			lxde
+			lightdm
+			lightdm-gtk-greeter
 		)
 		;;
 
@@ -184,6 +198,11 @@ case $DESKTOP in
 			ln -sf /usr/share/backgrounds/ubuntu-mate-rock64/ROCK64-Wallpaper-6.jpg /usr/share/slim/themes/rock64/background.png
 			sed -i "s/^current_theme(.*)/current_theme rock64/g" /etc/slim.conf
 		fi
+		;;
+
+	mate|lxde)
+		# uninstall screensaver as this results in double lock screen on resume
+		apt-get purge gnome-screensaver
 		;;
 
 	*)
