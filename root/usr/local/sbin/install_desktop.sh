@@ -157,7 +157,9 @@ case $DESKTOP-$DISTRO in
 		PACKAGES+=(
 			lxde
 			lightdm
-			unity-greeter
+			lightdm-gtk-greeter
+			ubuntu-mate-lightdm-theme
+			slick-greeter
 		)
 		;;
 
