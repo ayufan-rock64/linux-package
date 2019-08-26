@@ -158,3 +158,28 @@ systemctl disable rrdcached
 
 # init OMV
 # /usr/sbin/omv-initsystem
+
+# hotfix python 3.5
+# taken from: https://github.com/ayufan-rock64/linux-build/issues/136#issuecomment-477483779
+cat <<EOF | patch -d /usr/lib/python3.5 -p1 || true
+--- a/weakref.py  2018-09-28 00:02:01.000000000 +0800
++++ b/weakref.py  2019-03-28 15:35:03.677097971 +0800
+@@ -106,7 +106,7 @@
+         self, *args = args
+         if len(args) > 1:
+             raise TypeError('expected at most 1 arguments, got %d' % len(args))
+-        def remove(wr, selfref=ref(self)):
++        def remove(wr, selfref=ref(self), _atomic_removal=_remove_dead_weakref):
+             self = selfref()
+             if self is not None:
+                 if self._iterating:
+@@ -114,7 +114,7 @@
+                 else:
+                     # Atomic removal is necessary since this function
+                     # can be called asynchronously by the GC
+-                    _remove_dead_weakref(d, wr.key)
++                    _atomic_removal(d, wr.key)
+         self._remove = remove
+         # A list of keys to be removed
+         self._pending_removals = []
+EOF
