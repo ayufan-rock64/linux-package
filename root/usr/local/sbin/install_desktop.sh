@@ -202,7 +202,7 @@ case $DESKTOP in
 
 	mate|lxde)
 		# uninstall screensaver as this results in double lock screen on resume
-		apt-get purge gnome-screensaver
+		apt-get purge -y gnome-screensaver
 		;;
 
 	*)
