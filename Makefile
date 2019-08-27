@@ -34,6 +34,7 @@ board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb:
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux support package" \
 		--config-files /boot/efi/extlinux/ \
+		--config-files /var/lib/alsa/asound.state \
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
