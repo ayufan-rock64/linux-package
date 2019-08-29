@@ -1,2 +1,3 @@
 # We cannot use cosmic as it is no longer supported
 # deb http://ppa.launchpad.net/ayufan/rock64-0.9-ppa/ubuntu cosmic main
+# deb http://ppa.launchpad.net/ayufan/rock64-0.10-ppa/ubuntu cosmic main
