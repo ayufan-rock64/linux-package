@@ -32,7 +32,7 @@ set -xe
 sgdisk -e "$DISK"
 
 # resize partition 7 to as much as possible
-echo ",+,,," | sfdisk "${DISK}" -N7 --force
+echo ",+,,," | sfdisk "${DISK}" -N4 --force
 
 # re-read partition table
 partprobe "$DISK"
