@@ -1,14 +1,20 @@
 #!/bin/bash
 
+PYTHON_PATCH=
+NETATALK=
+
 case "$(lsb_release -c -s)" in
 	jessie)
 		RELEASE="erasmus"
 		EXTRAS_URL="https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all3.deb"
+		NETATALK=1
 		;;
 
 	stretch)
 		RELEASE="arrakis"
 		EXTRAS_URL="https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all4.deb"
+		NETATALK=1
+		PYTHON_PATCH=1
 		;;
 
 	buster)
@@ -89,10 +95,12 @@ xmlstarlet ed -L -u "/config/services/ssh/permitrootlogin" -v "0" ${OMV_CONFIG_F
 # enable ntp
 xmlstarlet ed -L -u "/config/system/time/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
 
-# improve netatalk performance
-apt-get -y install openmediavault-netatalk
-AFP_Options="mimic model = Macmini"
-xmlstarlet ed -L -u "/config/services/afp/extraoptions" -v "$(echo -e "${AFP_Options}")" ${OMV_CONFIG_FILE}
+if [[ -n "$NETATALK" ]]; then
+	# improve netatalk performance
+	apt-get -y install openmediavault-netatalk
+	AFP_Options="mimic model = Macmini"
+	xmlstarlet ed -L -u "/config/services/afp/extraoptions" -v "$(echo -e "${AFP_Options}")" ${OMV_CONFIG_FILE}
+fi
 
 # improve samba performance
 SMB_Options="min receivefile size = 16384\nwrite cache size = 524288\ngetwd cache = yes\nsocket options = TCP_NODELAY IPTOS_LOWDELAY"
@@ -136,7 +144,9 @@ EOF
 
 # update configs
 /usr/sbin/omv-mkconf monit
-/usr/sbin/omv-mkconf netatalk
+if [[ -n "$NETATALK" ]]; then
+	/usr/sbin/omv-mkconf netatalk
+fi
 /usr/sbin/omv-mkconf samba
 /usr/sbin/omv-mkconf timezone
 /usr/sbin/omv-mkconf collectd
@@ -159,9 +169,10 @@ systemctl disable rrdcached
 # init OMV
 # /usr/sbin/omv-initsystem
 
-# hotfix python 3.5
-# taken from: https://github.com/ayufan-rock64/linux-build/issues/136#issuecomment-477483779
-cat <<EOF | patch -d /usr/lib/python3.5 -p1 || true
+if [[ -n "$PYTHON_PATCH" ]]; then
+	# hotfix python 3.5
+	# taken from: https://github.com/ayufan-rock64/linux-build/issues/136#issuecomment-477483779
+	cat <<EOF | patch -d /usr/lib/python3.5 -p1 || true
 --- a/weakref.py  2018-09-28 00:02:01.000000000 +0800
 +++ b/weakref.py  2019-03-28 15:35:03.677097971 +0800
 @@ -106,7 +106,7 @@
@@ -183,3 +194,4 @@ cat <<EOF | patch -d /usr/lib/python3.5 -p1 || true
          # A list of keys to be removed
          self._pending_removals = []
 EOF
+fi
