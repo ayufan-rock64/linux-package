@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /etc/lsb-release
+source /etc/os-release
 
 set -e
 
@@ -13,10 +13,10 @@ case "$1" in
     systemctl enable sdio-hciattach || true
 
     # enable proper ppa
-    if [[ -f /etc/apt/sources.list.d/ayufan-rock64-$DISTRIB_CODENAME-ppa.list.bak ]]; then
+    if [[ -f /etc/apt/sources.list.d/ayufan-rock64-$VERSION_CODENAME-ppa.list.bak ]]; then
       dpkg-divert --local \
-        --divert /etc/apt/sources.list.d/ayufan-rock64-$DISTRIB_CODENAME-ppa.list \
-        --rename /etc/apt/sources.list.d/ayufan-rock64-$DISTRIB_CODENAME-ppa.list.bak || true
+        --divert /etc/apt/sources.list.d/ayufan-rock64-$VERSION_CODENAME-ppa.list \
+        --rename /etc/apt/sources.list.d/ayufan-rock64-$VERSION_CODENAME-ppa.list.bak || true
     fi
 
     # update hwdb
