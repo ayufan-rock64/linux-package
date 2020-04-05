@@ -2,6 +2,7 @@
 
 PYTHON_PATCH=
 NETATALK=
+SALT=
 
 case "$(lsb_release -c -s)" in
 	jessie)
@@ -20,6 +21,7 @@ case "$(lsb_release -c -s)" in
 	buster)
 		RELEASE="usul"
 		EXTRAS_URL="https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all5.deb"
+		SALT=1
 		;;
 
 	*)
@@ -143,18 +145,22 @@ cat <<EOF >>/etc/rsyslog.d/omv-armbian.conf
 EOF
 
 # update configs
-/usr/sbin/omv-mkconf monit
-if [[ -n "$NETATALK" ]]; then
-	/usr/sbin/omv-mkconf netatalk
+if [[ -n "$SALT" ]]; then
+	/usr/sbin/omv-salt stage run deploy
+else
+	/usr/sbin/omv-mkconf monit
+	if [[ -n "$NETATALK" ]]; then
+		/usr/sbin/omv-mkconf netatalk
+	fi
+	/usr/sbin/omv-mkconf samba
+	/usr/sbin/omv-mkconf timezone
+	/usr/sbin/omv-mkconf collectd
+	/usr/sbin/omv-mkconf flashmemory
+	/usr/sbin/omv-mkconf ssh
+	/usr/sbin/omv-mkconf ntp
+	/usr/sbin/omv-mkconf cpufrequtils
+	/usr/sbin/omv-mkconf interfaces
 fi
-/usr/sbin/omv-mkconf samba
-/usr/sbin/omv-mkconf timezone
-/usr/sbin/omv-mkconf collectd
-/usr/sbin/omv-mkconf flashmemory
-/usr/sbin/omv-mkconf ssh
-/usr/sbin/omv-mkconf ntp
-/usr/sbin/omv-mkconf cpufrequtils
-/usr/sbin/omv-mkconf interfaces
 
 # make sure that rrdcached/php does exist
 mkdir -p /var/lib/rrdcached /var/lib/php
