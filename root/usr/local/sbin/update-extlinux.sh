@@ -29,22 +29,30 @@ emit_kernel() {
   local NAME="$3"
 
   echo "label kernel-$VERSION$NAME"
-  echo "    kernel /boot/vmlinuz-$VERSION"
+  echo "    kernel $MOUNT_PREFIX/vmlinuz-$VERSION"
   if [[ -f "/boot/initrd.img-$VERSION" ]]; then
-    echo "    initrd /boot/initrd.img-$VERSION"
+    echo "    initrd $MOUNT_PREFIX/initrd.img-$VERSION"
   fi
   if [[ -f "/boot/dtb-$VERSION" ]]; then
-    echo "    fdt /boot/dtb-$VERSION"
+    echo "    fdt $MOUNT_PREFIX/dtb-$VERSION"
   else
     if [[ ! -d "/boot/dtbs/$VERSION" ]]; then
       mkdir -p /boot/dtbs
       cp -au "/usr/lib/linux-image-$VERSION" "/boot/dtbs/$VERSION"
     fi
-    echo "    devicetreedir /boot/dtbs/$VERSION"
+    echo "    devicetreedir $MOUNT_PREFIX/dtbs/$VERSION"
   fi
   echo "    append $APPEND"
   echo ""
 }
+
+if findmnt /boot >/dev/null; then
+  # If we have `/boot` the files are in `/`
+  MOUNT_PREFIX=
+else
+  # If we don't have `/boot` mount the files are in `/boot`
+  MOUNT_PREFIX=/boot
+fi
 
 linux-version list | linux-version sort --reverse | while read VERSION; do
   emit_kernel "$VERSION" "$APPEND"
