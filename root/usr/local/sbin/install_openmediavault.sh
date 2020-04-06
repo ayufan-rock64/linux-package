@@ -148,7 +148,7 @@ EOF
 $MKCONF_CMD monit
 $MKCONF_CMD netatalk || true
 $MKCONF_CMD samba
-$MKCONF_CMD hostname
+$MKCONF_CMD hostname || true
 $MKCONF_CMD timezone
 $MKCONF_CMD collectd
 $MKCONF_CMD flashmemory
