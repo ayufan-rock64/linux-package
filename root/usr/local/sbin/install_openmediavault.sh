@@ -161,9 +161,6 @@ $MKCONF_CMD systemd-networkd || true
 # make sure that rrdcached/php does exist
 mkdir -p /var/lib/rrdcached /var/lib/php
 
-# disable rrdcached
-systemctl mask rrdcached
-
 # init OMV
 # /usr/sbin/omv-initsystem
 
