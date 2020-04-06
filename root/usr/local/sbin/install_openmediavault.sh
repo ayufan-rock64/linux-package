@@ -154,7 +154,7 @@ $MKCONF_CMD collectd
 $MKCONF_CMD flashmemory
 $MKCONF_CMD ssh
 $MKCONF_CMD ntp || true
-$MKCONF_CMD cpufrequtils
+$MKCONF_CMD cpufrequtils || true
 $MKCONF_CMD interfaces || true
 $MKCONF_CMD systemd-networkd || true
 
