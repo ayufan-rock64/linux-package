@@ -166,11 +166,7 @@ fi
 mkdir -p /var/lib/rrdcached /var/lib/php
 
 # disable rrdcached
-systemctl disable rrdcached
-
-/sbin/folder2ram -enablesystemd
-/sbin/folder2ram -mountall || true
-/sbin/folder2ram -umountall || true
+systemctl mask rrdcached
 
 # init OMV
 # /usr/sbin/omv-initsystem
