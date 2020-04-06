@@ -36,31 +36,14 @@ PACKAGES=(
 
 # Video/3d acceleration packages
 PACKAGES+=(
-	xserver-xorg-video-armsoc
-	libdrm-rockchip1
+#	xserver-xorg-video-armsoc
+#	libdrm-rockchip1
 	libgl1
-	libgl4es1
+#	libgl4es1
 	libglvnd-dev
 	ffmpeg
 	mpv
 )
-
-if grep -qi rockpro64 /proc/device-tree/compatible || grep -qi rockpro64 /etc/flash-kernel/machine; then
-	PACKAGES+=(
-		libmali-rk-midgard-t86x-r14p0
-	)
-elif grep -qi pinebook-pro /proc/device-tree/compatible || grep -qi pinebookpro /etc/flash-kernel/machine; then
-	PACKAGES+=(
-		libmali-rk-midgard-t86x-r14p0
-	)
-elif grep -qi rock64 /proc/device-tree/compatible || grep -qi rock64 /etc/flash-kernel/machine; then
-	PACKAGES+=(
-		libmali-rk-utgard-450-r7p0
-	)
-else
-	echo "Board not detected!"
-	exit 1
-fi
 
 # Additional packages
 PACKAGES+=(
