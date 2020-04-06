@@ -144,6 +144,10 @@ cat <<EOF >>/etc/rsyslog.d/omv-armbian.conf
 :msg, contains, "Failed to initiate sched scan" ~
 EOF
 
+# ensure that dmidecode is removed
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=923988:
+apt-get purge -y dmidecode
+
 # update configs
 $MKCONF_CMD monit
 $MKCONF_CMD netatalk || true
