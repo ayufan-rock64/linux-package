@@ -58,7 +58,8 @@ PACKAGES+=(
 case $DISTRO in
 	Ubuntu)
 		PACKAGES+=(
-			chromium-browser
+			# TODO: for now it fails with `snap` access
+			# chromium-browser
 			firefox
 		)
 		;;
