@@ -8,14 +8,22 @@ fi
 dev=$(findmnt / -n -o SOURCE)
 
 case $dev in
-	/dev/mmcblk*)
+	/dev/mmcblk?p?)
 		DISK=${dev:0:12}
+		PART=${dev:13}
 		NAME="sd/emmc"
 		;;
 
-	/dev/sd*)
+	/dev/sd??)
 		DISK=${dev:0:8}
+		PART=${dev:8}
 		NAME="hdd/ssd"
+		;;
+
+	/dev/nvme?n?p?)
+		DISK=${dev:0:12}
+		PART=${dev:13}
+		NAME="pcie/nvme"
 		;;
 
 	*)
@@ -31,8 +39,8 @@ set -xe
 # move GPT alternate header to end of disk
 sgdisk -e "$DISK"
 
-# resize partition 7 to as much as possible
-echo ",+,,," | sfdisk "${DISK}" -N4 --force
+# resize partition 4 to as much as possible
+echo ",+,,," | sfdisk "${DISK}" "-N$PART" --force
 
 # re-read partition table
 partprobe "$DISK"
