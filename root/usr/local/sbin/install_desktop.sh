@@ -53,6 +53,7 @@ PACKAGES+=(
 	network-manager
 	pulseaudio
 	ibus
+	xinit # for startx
 )
 
 case $DISTRO in
