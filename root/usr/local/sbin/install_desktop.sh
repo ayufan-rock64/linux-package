@@ -52,6 +52,7 @@ PACKAGES+=(
 	suckless-tools
 	network-manager
 	pulseaudio
+	bluez
 	ibus
 	xinit # for startx
 )
