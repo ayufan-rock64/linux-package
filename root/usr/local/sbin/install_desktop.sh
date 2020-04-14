@@ -108,6 +108,8 @@ case $DESKTOP-$DISTRO in
 			network-manager-gnome
 			network-manager-openvpn-gnome
 			lightdm
+			lightdm-gtk-greeter
+			ubuntu-mate-lightdm-theme
 			unity-greeter
 			dconf-editor
 		)
@@ -168,6 +170,7 @@ case $DESKTOP-$DISTRO in
 			xubuntu-desktop
 			lightdm
 			lightdm-gtk-greeter
+			ubuntu-mate-lightdm-theme
 		)
 		;;
 
