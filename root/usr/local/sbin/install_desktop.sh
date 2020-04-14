@@ -83,7 +83,6 @@ case $DESKTOP-$DISTRO in
 	mate-Ubuntu)
 		PACKAGES+=(
 			ubuntu-mate-desktop
-			ubuntu-mate-core
 			ubuntu-mate-wallpapers
 			ubuntu-mate-artwork
 			mate-applet-brisk-menu
@@ -139,6 +138,7 @@ case $DESKTOP-$DISTRO in
 		PACKAGES+=(
 			ubuntu-gnome-desktop
 			ubuntu-gnome-wallpapers-xenial
+			gdm3
 		)
 		;;
 
@@ -162,6 +162,8 @@ case $DESKTOP-$DISTRO in
 	xfce4-Ubuntu)
 		PACKAGES+=(
 			xubuntu-desktop
+			lightdm
+			lightdm-gtk-greeter
 		)
 		;;
 
