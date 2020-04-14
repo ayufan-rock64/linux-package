@@ -103,6 +103,9 @@ case $DESKTOP-$DISTRO in
 			mate-window-menu-applet
 			mate-window-title-applet
 			mate-hud
+			network-manager
+			network-manager-gnome
+			network-manager-openvpn-gnome
 			lightdm
 			unity-greeter
 			dconf-editor
@@ -174,6 +177,9 @@ case $DESKTOP-$DISTRO in
 			lightdm-gtk-greeter
 			ubuntu-mate-lightdm-theme
 			slick-greeter
+			network-manager
+			network-manager-gnome
+			network-manager-openvpn-gnome
 		)
 		;;
 
