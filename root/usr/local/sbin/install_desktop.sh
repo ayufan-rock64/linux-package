@@ -5,7 +5,7 @@ set -e
 DESKTOP="$1"
 
 if [ -z "$DESKTOP" ]; then
-	echo "Usage: $0 <mate|i3|gnome|xfce4|lxde>"
+	echo "Usage: $0 <mate|i3|gnome|xfce4|lxde|kde>"
 	exit 1
 fi
 
@@ -82,15 +82,31 @@ esac
 case $DESKTOP-$DISTRO in
 	mate-Ubuntu)
 		PACKAGES+=(
+			ubuntu-mate-desktop
 			ubuntu-mate-core
+			ubuntu-mate-wallpapers
+			ubuntu-mate-artwork
 			mate-applet-brisk-menu
 			mate-applet-appmenu
 			mate-desktop-environment
 			mate-desktop-environment-extra
 			mate-desktop-environment-extras
+			mate-dock-applet
+			mate-menu
+			mate-sensors-applet
+			mate-tweak
+			mate-user-share
+			mate-system-monitor
+			mate-user-guide
+			mate-calc
+			mate-accessibility-profiles
+			mate-netbook
+			mate-window-menu-applet
+			mate-window-title-applet
 			mate-hud
 			lightdm
 			unity-greeter
+			dconf-editor
 		)
 		;;
 
@@ -100,7 +116,20 @@ case $DESKTOP-$DISTRO in
 			mate-desktop-environment-extra
 			mate-desktop-environment-extras
 			mate-hud
+			mate-dock-applet
+			mate-menu
+			mate-sensors-applet
+			mate-tweak
+			mate-user-share
+			mate-system-monitor
+			mate-user-guide
+			mate-calc
+			mate-accessibility-profiles
+			mate-netbook
+			mate-window-menu-applet
+			mate-window-title-applet
 			desktop-base
+			dconf-editor
 			lightdm
 			lightdm-gtk-greeter
 		)
@@ -130,11 +159,9 @@ case $DESKTOP-$DISTRO in
 		)
 		;;
 
-	xfce4-Ubuntu|xfce4-Debian)
+	xfce4-Ubuntu)
 		PACKAGES+=(
-			xfce4
-			xfce4-goodies
-			slim
+			xubuntu-desktop
 		)
 		;;
 
@@ -156,6 +183,14 @@ case $DESKTOP-$DISTRO in
 		)
 		;;
 
+	kde-Ubuntu)
+		PACKAGES+=(
+			kubuntu-desktop
+			lightdm
+			lightdm-gtk-greeter
+		)
+		;;
+
 	*)
 		echo "Error: unsupported desktop environment $DESKTOP"
 		exit 2
@@ -164,7 +199,7 @@ esac
 
 # Install.
 apt -y update
-apt -y --install-recommends install ${PACKAGES[@]}
+apt -y install ${PACKAGES[@]}
 
 # Kill parport module loading, not available on arm64.
 if [ -e "/etc/modules-load.d/cups-filters.conf" ]; then
@@ -207,6 +242,9 @@ if [[ -e /usr/lib/dbus-1.0/dbus-daemon-launch-helper ]]; then
 	chown root:messagebus /usr/lib/dbus-1.0/dbus-daemon-launch-helper
 	chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper
 fi
+
+# Fix missing icons due to missing `loaders.cache`
+dpkg-reconfigure libgdk-pixbuf2.0-0
 
 if [[ ! -f /etc/pulse/default.pa ]]; then
 	echo "PulseAudio is missing and cannot be configured."
