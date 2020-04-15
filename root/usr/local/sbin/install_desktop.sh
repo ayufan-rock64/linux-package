@@ -255,9 +255,6 @@ if [[ -e /usr/lib/dbus-1.0/dbus-daemon-launch-helper ]]; then
 	chmod u+s /usr/lib/dbus-1.0/dbus-daemon-launch-helper
 fi
 
-# Fix missing icons due to missing `loaders.cache`
-dpkg-reconfigure libgdk-pixbuf2.0-0
-
 if [[ ! -f /etc/pulse/default.pa ]]; then
 	echo "PulseAudio is missing and cannot be configured."
 	exit 1
