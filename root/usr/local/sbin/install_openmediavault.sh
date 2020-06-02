@@ -100,12 +100,12 @@ xmlstarlet ed -L -u "/config/system/time/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
 if [[ -n "$NETATALK" ]]; then
 	# improve netatalk performance
 	apt-get -y install openmediavault-netatalk
-	AFP_Options="mimic model = Macmini"
+	AFP_Options="mimic model = Macmini\nveto files = /Temporary Items/.DS_Store/.AppleDB/.TemporaryItems/.AppleDouble/.bin/.AppleDesktop/Network Trash Folder/.Spotlight/.Trashes/.fseventd/\ndelete veto files = yes"
 	xmlstarlet ed -L -u "/config/services/afp/extraoptions" -v "$(echo -e "${AFP_Options}")" ${OMV_CONFIG_FILE}
 fi
 
 # improve samba performance
-SMB_Options="min receivefile size = 16384\nwrite cache size = 524288\ngetwd cache = yes\nsocket options = TCP_NODELAY IPTOS_LOWDELAY"
+SMB_Options="min receivefile size = 16384\nwrite cache size = 524288\ngetwd cache = yes\nsocket options = TCP_NODELAY IPTOS_LOWDELAY\nveto files = /Temporary Items/.DS_Store/.AppleDB/.TemporaryItems/.AppleDouble/.bin/.AppleDesktop/Network Trash Folder/.Spotlight/.Trashes/.fseventd/\ndelete veto files = yes"
 xmlstarlet ed -L -u "/config/services/smb/extraoptions" -v "$(echo -e "${SMB_Options}")" ${OMV_CONFIG_FILE}
 
 # fix timezone
