@@ -7,7 +7,8 @@ export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
 Tweak_CPUFreq_Governor() {
 	if [ ! -d $1 ]; then
-		continue
+                # return instead of continue, as continue triggers an error mail from cron...
+		return
 	fi
 
 	echo ondemand > $1/cpufreq/scaling_governor
