@@ -24,8 +24,14 @@ case "$(lsb_release -c -s)" in
 		MKCONF_CMD="/usr/sbin/omv-salt deploy run"
 		;;
 
+	bullseye)
+		RELEASE="shaitan"
+		EXTRAS_URL="https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all6.deb"
+		MKCONF_CMD="/usr/sbin/omv-salt deploy run"
+		;;
+
 	*)
-		echo "This script only works on Debian/Jessie|Stretch|Buster"
+		echo "This script only works on Debian/Jessie/Stretch/Buster/Bullseye"
 		exit 1
 esac
 
