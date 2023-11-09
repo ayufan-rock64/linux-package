@@ -1,4 +1,4 @@
-image: ayufan/rock64-dockerfiles:x86_64
+image: ayufan/rock64-dockerfiles:bookworm
 
 variables:
   GITHUB_USER: ayufan-rock64
@@ -15,6 +15,7 @@ build:
     - make BOARD_TARGET=rock64
     - make BOARD_TARGET=rockpro64
     - make BOARD_TARGET=rockpi4b
+    - make BOARD_TARGET=rockpi5b
     - make BOARD_TARGET=pinebookpro
     - |
       set -x
