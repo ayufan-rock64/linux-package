@@ -1,0 +1,62 @@
+on: [push]
+
+env:
+  RELEASE_START: 213
+  CCACHE_DIR: $RUNNER_TEMP/ccache
+
+jobs:
+  build:
+    # runs-on: [self-hosted, Linux, ARM64]
+    runs-on: ubuntu-latest
+    container: ayufan/rock64-dockerfiles:bookworm
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Reset ccache statistics
+      run: ccache -M 0 -F 0
+    - name: Build package
+      run: |
+        export RELEASE=$(($RELEASE_START+$GITHUB_RUN_NUMBER))
+        rm -f ../*.deb
+        make BOARD_TARGET=rock64
+        make BOARD_TARGET=rockpro64
+        make BOARD_TARGET=rockpi4b
+        make BOARD_TARGET=rockpi5b
+        make BOARD_TARGET=pinebookpro
+    - name: Release package
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        set -x
+
+        export RELEASE=$(($RELEASE_START+$GITHUB_RUN_NUMBER))
+        export RELEASE_NAME="$(make version BOARD_TARGET=rock64)"
+        export RELEASE_TITLE="$(make version BOARD_TARGET=rock64)"
+        export DESCRIPTION="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+        github-release release \
+          --tag "${RELEASE_NAME}" \
+          --name "${RELEASE_TITLE}" \
+          --user "${GITHUB_REPOSITORY%/*}" \
+          --repo "${GITHUB_REPOSITORY#*/}" \
+          --description "${DESCRIPTION}" \
+          --target "${GITHUB_SHA}" \
+          --draft
+
+        sleep 3s # allow to update release
+
+        for i in *.deb; do
+          github-release upload \
+            --tag "${RELEASE_NAME}" \
+            --name "$(basename "${i}")" \
+            --user "${GITHUB_REPOSITORY%/*}" \
+            --repo "${GITHUB_REPOSITORY#*/}" \
+            --file "${i}"
+        done
+
+        github-release edit \
+          --tag "${RELEASE_NAME}" \
+          --name "${RELEASE_TITLE}" \
+          --user "${GITHUB_REPOSITORY%/*}" \
+          --repo "${GITHUB_REPOSITORY#*/}" \
+          --description "${DESCRIPTION}"
