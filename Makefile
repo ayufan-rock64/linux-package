@@ -2,11 +2,7 @@ export RELEASE ?= 1
 export RELEASE_NAME ?= $(shell cat VERSION)-$(RELEASE)
 export RELEASE_VERSION ?= $(RELEASE_NAME)-g$(shell git rev-parse --short HEAD)
 
-ifeq (,$(wildcard root-$(BOARD_TARGET)))
-$(error Unsupported BOARD_TARGET)
-endif
-
-all: board-package
+all:
 
 version:
 	@echo $(RELEASE_NAME)
@@ -14,7 +10,19 @@ version:
 release:
 	@echo $(RELEASE_VERSION)
 
-board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb:
+ifeq (,$(BOARD_TARGET))
+
+all:
+	@echo $(patsubst root-%,%-board,$(wildcard root-*))
+
+all-boards: $(patsubst root-%,%-board,$(wildcard root-*))
+
+%-board:
+	make BOARD_TARGET=$(patsubst %-board,%,$@)
+
+else
+
+board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb: root-$(BOARD_TARGET)
 	fpm -s dir -t deb -n board-package-$(BOARD_TARGET)-$(RELEASE_NAME) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
@@ -45,6 +53,8 @@ board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb:
 clean:
 	rm -f board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
 
+all: board-package
+
 .PHONY: board-package		# compile board compatibility package
 board-package: board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
 
@@ -52,3 +62,5 @@ board-package: board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
 deploy: clean board-package
 	scp -4 board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb root@$(DEPLOY_HOST):/tmp
 	ssh -4 root@$(DEPLOY_HOST) apt -y --reinstall install /tmp/board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
+
+endif
