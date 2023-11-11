@@ -21,7 +21,7 @@ jobs:
         make BOARD_TARGET=rock64
         make BOARD_TARGET=rockpro64
         make BOARD_TARGET=rockpi4b
-        make BOARD_TARGET=rockpi5b
+        make BOARD_TARGET=rock5b
         make BOARD_TARGET=pinebookpro
     - name: Release package
       env:
