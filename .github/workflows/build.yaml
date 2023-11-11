@@ -12,24 +12,18 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Reset ccache statistics
-      run: ccache -M 0 -F 0
-    - name: Build package
-      run: |
-        export RELEASE=$(($RELEASE_START+$GITHUB_RUN_NUMBER))
-        rm -f ../*.deb
-        make BOARD_TARGET=rock64
-        make BOARD_TARGET=rockpro64
-        make BOARD_TARGET=rockpi4b
-        make BOARD_TARGET=rock5b
-        make BOARD_TARGET=pinebookpro
+    - name: Configure version
+      run: echo "RELEASE=$(($RELEASE_START+$GITHUB_RUN_NUMBER))" >> $GITHUB_ENV
+    - name: Cleanup old packages
+      run: rm -f *.deb
+    - name: Build packages
+      run: make
     - name: Release package
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         set -x
 
-        export RELEASE=$(($RELEASE_START+$GITHUB_RUN_NUMBER))
         export RELEASE_NAME="$(make version BOARD_TARGET=rock64)"
         export RELEASE_TITLE="$(make version BOARD_TARGET=rock64)"
         export DESCRIPTION="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
