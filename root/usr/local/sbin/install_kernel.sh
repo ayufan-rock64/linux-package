@@ -3,23 +3,26 @@
 set -eo pipefail
 
 if [[ "$#" -ne 1 ]]; then
-  echo "Usage: $0 <kernel-version>"
+  echo "Usage: $0 [latest] [kernel-version]"
   exit 1
 fi
 
 find() {
-  curl --silent --fail "https://api.github.com/repos/ayufan-rock64/$1/releases/tags/$2" \
+  if [[ "$2" != "latest" ]]; then
+    set -- "$1" "tags/$2"
+  fi
+  curl --silent --fail "https://api.github.com/repos/ayufan-rock64/$1/releases/$2" \
     | jq -r '.assets | .[] | .browser_download_url' \
     | grep -E 'linux-image|linux-headers' \
     | grep -v '\-dbg'
 }
 
 if FILES=$(find linux-mainline-kernel "$1"); then
-  echo "Installing..."
+  echo "Installing $1..."
   echo "$FILES"
   install_deb $FILES
 elif FILES=$(find linux-kernel "$1"); then
-  echo "Installing..."
+  echo "Installing $1..."
   echo "$FILES"
   install_deb $FILES
 else
