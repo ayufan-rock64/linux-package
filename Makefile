@@ -22,7 +22,11 @@ all-boards: $(patsubst root-%,%-board,$(wildcard root-*))
 
 else
 
-board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb: root-$(BOARD_TARGET)
+root-$(BOARD_TARGET)/etc/board-package:
+	mkdir -p root-$(BOARD_TARGET)/etc
+	echo "BOARD=$(BOARD_TARGET)" > root-$(BOARD_TARGET)/etc/board-package
+
+board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb: root-$(BOARD_TARGET)/etc/board-package
 	fpm -s dir -t deb -n board-package-$(BOARD_TARGET)-$(RELEASE_NAME) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
