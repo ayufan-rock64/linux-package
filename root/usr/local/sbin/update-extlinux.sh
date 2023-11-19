@@ -13,6 +13,15 @@ set -eo pipefail
 
 . /etc/default/extlinux
 
+shopt -s nullglob
+
+for dtb in /boot/dtbs/*; do
+  version=$(basename "$dtb")
+  [[ -e "/boot/vmlinuz-$version" ]] && continue
+  echo "Removing old $dtb..." 1>&2
+  rm -r "$dtb"
+done
+
 echo "Creating new extlinux.conf..." 1>&2
 
 mkdir -p /boot/extlinux/
