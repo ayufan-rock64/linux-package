@@ -2,6 +2,8 @@ export RELEASE ?= 1
 export RELEASE_NAME ?= $(shell cat VERSION)-$(RELEASE)
 export RELEASE_VERSION ?= $(RELEASE_NAME)-g$(shell git rev-parse --short HEAD)
 
+SHELL := /bin/bash
+
 all:
 
 version:
@@ -12,13 +14,17 @@ release:
 
 ifeq (,$(BOARD_TARGET))
 
-all:
+all: $(patsubst root-%,%-board,$(wildcard root-*))
+clean: $(patsubst root-%,%-clean,$(wildcard root-*))
+
+list:
 	@echo $(patsubst root-%,%-board,$(wildcard root-*))
 
-all-boards: $(patsubst root-%,%-board,$(wildcard root-*))
-
 %-board:
-	make BOARD_TARGET=$(patsubst %-board,%,$@)
+	make BOARD_TARGET=$(patsubst %-board,%,$@) &> >(ts "[$(patsubst %-board,%,$@)]")
+
+%-clean:
+	make clean BOARD_TARGET=$(patsubst %-clean,%,$@) &> >(ts "[$(patsubst %-clean,%,$@)]")
 
 else
 

@@ -17,7 +17,7 @@ jobs:
     - name: Cleanup old packages
       run: rm -f *.deb
     - name: Build packages
-      run: make all-boards
+      run: make all
     - name: Release package
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
