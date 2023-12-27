@@ -6,3 +6,6 @@
 
 # Configure additional kernel configuration options
 APPEND="$APPEND root=LABEL=linux-root rootwait rootfstype=ext4"
+
+# Use old ifnames (like eth0)
+APPEND="$APPEND net.ifnames=0"
