@@ -17,7 +17,7 @@ apt-get install -y \
     software-properties-common
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | apt-key add -
 
 RELEASE=$(lsb_release -cs)
 
@@ -25,7 +25,7 @@ add-apt-repository \
    "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $RELEASE stable"
 
 add-apt-repository \
-   "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+   "deb https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
 
 apt-get update -y
 apt-get install -y docker-ce docker-compose kubelet kubeadm kubectl
