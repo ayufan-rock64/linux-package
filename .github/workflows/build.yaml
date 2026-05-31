@@ -6,51 +6,26 @@ env:
 
 jobs:
   build:
-    # runs-on: [self-hosted, Linux, ARM64]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     container: ayufan/rock64-dockerfiles:bookworm
+    permissions:
+      contents: write
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Configure version
       run: echo "RELEASE=$(($RELEASE_START+$GITHUB_RUN_NUMBER))" >> $GITHUB_ENV
+    - name: Configure release name
+      run: echo "RELEASE_NAME=$(make version)" >> $GITHUB_ENV
     - name: Cleanup old packages
       run: rm -f *.deb
     - name: Build packages
       run: make all
     - name: Release package
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        set -x
-
-        export RELEASE_NAME="$(make version BOARD_TARGET=rock64)"
-        export RELEASE_TITLE="$(make version BOARD_TARGET=rock64)"
-        export DESCRIPTION="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-
-        github-release release \
-          --tag "${RELEASE_NAME}" \
-          --name "${RELEASE_TITLE}" \
-          --user "${GITHUB_REPOSITORY%/*}" \
-          --repo "${GITHUB_REPOSITORY#*/}" \
-          --description "${DESCRIPTION}" \
-          --target "${GITHUB_SHA}" \
-          --draft
-
-        sleep 3s # allow to update release
-
-        for i in *.deb; do
-          github-release upload \
-            --tag "${RELEASE_NAME}" \
-            --name "$(basename "${i}")" \
-            --user "${GITHUB_REPOSITORY%/*}" \
-            --repo "${GITHUB_REPOSITORY#*/}" \
-            --file "${i}"
-        done
-
-        github-release edit \
-          --tag "${RELEASE_NAME}" \
-          --name "${RELEASE_TITLE}" \
-          --user "${GITHUB_REPOSITORY%/*}" \
-          --repo "${GITHUB_REPOSITORY#*/}" \
-          --description "${DESCRIPTION}"
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ env.RELEASE_NAME }}
+        name: ${{ env.RELEASE_NAME }}
+        body: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        target_commitish: ${{ github.sha }}
+        files: "*.deb"
