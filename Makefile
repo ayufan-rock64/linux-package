@@ -14,11 +14,13 @@ release:
 
 ifeq (,$(BOARD_TARGET))
 
-all: $(patsubst root-%,%-board,$(wildcard root-*))
-clean: $(patsubst root-%,%-clean,$(wildcard root-*))
+BOARDS := $(patsubst boards/%,%,$(wildcard boards/*))
+
+all: $(patsubst %,%-board,$(BOARDS))
+clean: $(patsubst %,%-clean,$(BOARDS))
 
 list:
-	@echo $(patsubst root-%,%-board,$(wildcard root-*))
+	@echo $(patsubst %,%-board,$(BOARDS))
 
 %-board:
 	make BOARD_TARGET=$(patsubst %-board,%,$@) &> >(ts "[$(patsubst %-board,%,$@)]")
@@ -28,11 +30,16 @@ list:
 
 else
 
-root-$(BOARD_TARGET)/etc/board-package:
-	mkdir -p root-$(BOARD_TARGET)/etc
-	echo "BOARD=$(BOARD_TARGET)" > root-$(BOARD_TARGET)/etc/board-package
+OVERLAYS := boards/generic/=/
+ifneq ($(BOARD_TARGET),generic)
+OVERLAYS += boards/$(BOARD_TARGET)/=/
+endif
 
-board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb: root-$(BOARD_TARGET)/etc/board-package
+boards/$(BOARD_TARGET)/etc/board-package:
+	mkdir -p boards/$(BOARD_TARGET)/etc
+	echo "BOARD=$(BOARD_TARGET)" > boards/$(BOARD_TARGET)/etc/board-package
+
+board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb: boards/$(BOARD_TARGET)/etc/board-package
 	fpm -s dir -t deb -n board-package-$(BOARD_TARGET)-$(RELEASE_NAME) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
@@ -56,8 +63,7 @@ board-package-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb: root-$(BOARD_TARGET)/etc/
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a all \
-		root/=/ \
-		root-$(BOARD_TARGET)/=/
+		$(OVERLAYS)
 
 .PHONY: clean
 clean:
