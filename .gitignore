@@ -1,2 +1,2 @@
 /*.deb
-board-package
+boards/*/etc/board-package
